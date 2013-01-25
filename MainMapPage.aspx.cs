@@ -19,23 +19,23 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
         GoogleMapForASPNet1.GoogleMapObject.APIKey = ConfigurationManager.AppSettings["GoogleAPIKey"]; 
 
         //Specify width and height for map. You can specify either in pixels or in percentage relative to it's container.
-        GoogleMapForASPNet1.GoogleMapObject.Width = "800px"; // You can also specify percentage(e.g. 80%) here
-        GoogleMapForASPNet1.GoogleMapObject.Height = "600px";
+        GoogleMapForASPNet1.GoogleMapObject.Width = "900px"; // You can also specify percentage(e.g. 80%) here
+        GoogleMapForASPNet1.GoogleMapObject.Height = "800px";
 
         //Specify initial Zoom level.
-        GoogleMapForASPNet1.GoogleMapObject.ZoomLevel = 13;
+        GoogleMapForASPNet1.GoogleMapObject.ZoomLevel = 8;
         GoogleMapForASPNet1.GoogleMapObject.AutomaticBoundaryAndZoom = false;
         //Specify Center Point for map. Map will be centered on this point.
-        GoogleMapForASPNet1.GoogleMapObject.CenterPoint = new GooglePoint("1", 43.66619, -79.44268);
+        GoogleMapForASPNet1.GoogleMapObject.CenterPoint = new GooglePoint("1", 44.00, 18.00);
 
         //Add pushpins for map. 
         //This should be done with intialization of GooglePoint class. 
         //ID is to identify a pushpin. It must be unique for each pin. Type is string.
         //Other properties latitude and longitude.
         GooglePoint GP1 = new GooglePoint();
-        GP1.ID = "RedCar";
-        GP1.Latitude = 43.65669;
-        GP1.Longitude = -79.47268;  //+0.001
+        GP1.ID = "Test1";
+        GP1.Latitude = 44.00;
+        GP1.Longitude = 18.00;  //+0.001
         //Specify bubble text here. You can use standard HTML tags here.
         GP1.InfoHTML = "This is Pushpin 1";
 
@@ -48,6 +48,6 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
     {
         // Move Red Car. 
         //Increment longitude value to move car horizontally. 
-        GoogleMapForASPNet1.GoogleMapObject.Points["RedCar"].Longitude += 0.001;
+        GoogleMapForASPNet1.GoogleMapObject.Points["Test1"].Longitude += 0.001;
     }
 }

@@ -11,7 +11,7 @@
     <div>
         <h2>WEB BASED TRACK DISPLAY</h2>
         <p>
-            <a href="MapWithAutoMovingPushpins.aspx">START</a></p>
+            <a href="MainMapPage.aspx">START</a></p>
         </div>
     </form>
 </body>
