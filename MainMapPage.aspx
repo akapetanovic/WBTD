@@ -9,15 +9,60 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
-    <title>Google Map with automatically moving pushpins</title>
+    <title></title>
+    <style type="text/css">
+        .style2
+        {
+            width: 518px;
+            height: 80px;
+        }
+        .style3
+        {
+            width: 900px;
+            height: 80px;
+        }
+        .style4
+        {
+            height: 85px;
+            width: 290px;
+        }
+        .style9
+        {
+            width: 290px;
+        }
+        .style12
+        {
+            width: 238px;
+        }
+        .style13
+        {
+            height: 85px;
+            width: 238px;
+        }
+        .style14
+        {
+            width: 307px;
+        }
+        .style15
+        {
+            height: 85px;
+            width: 307px;
+        }
+    </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+     <form id="form1" runat="server">
+    <table>
+        <tr>
+            <td class="style3">
+              
             <asp:ScriptManager ID="ScriptManager1" runat="server">
         </asp:ScriptManager>
 
     <h3><a href="Default.aspx">Back</a></h3>
     <div>
+        <asp:Panel ID="Panel1" runat="server">
+        </asp:Panel>
         <uc1:GoogleMapForASPNet ID="GoogleMapForASPNet1" runat="server" />
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
@@ -26,6 +71,44 @@
         </ContentTemplate>
         </asp:UpdatePanel>
     </div>
-    </form>
+   
+            </td>
+            <td class="style2">
+                <table style="width: 300px; height: 200px; margin-left: 10px;" align="left" 
+                    bgcolor="#999999" border="aaa" frame="border">
+                    <tr>
+                        <td class="style14">
+                           
+                            <asp:CheckBox ID="CheckBoxCustomMapEnabled" runat="server" 
+                                oncheckedchanged="CheckBox1_CheckedChanged" Text="Custom Map" />
+                        </td>
+                        <td class="style12">
+                            aaaaa</td>
+                        <td class="style9">
+                            aaaaa</td>
+                    </tr>
+                    <tr>
+                        <td class="style14">
+                            &nbsp;</td>
+                        <td class="style12">
+                            aaaaa</td>
+                        <td class="style9">
+                            aaaaa</td>
+                    </tr>
+                    <tr>
+                        <td class="style15">
+                            aaaaa</td>
+                        <td class="style13">
+                            aaaaa</td>
+                        <td class="style4">
+                            aaaaa</td>
+                    </tr>
+
+                </table>
+     
+        </tr>
+        </table>
+         </form>
+   
 </body>
 </html>

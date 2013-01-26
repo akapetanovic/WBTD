@@ -13,6 +13,7 @@
         <p>
             <a href="MainMapPage.aspx">START</a></p>
         </div>
+    <br />
     </form>
 </body>
 </html>
