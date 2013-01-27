@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
+using System.Drawing;
 
 public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
 {
@@ -15,7 +16,7 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
     {
         //You must specify Google Map API Key for this component. You can obtain this key from http://code.google.com/apis/maps/signup.html
         //For samples to run properly, set GoogleAPIKey in Web.Config file.
-        GoogleMapForASPNet1.GoogleMapObject.APIKey = ConfigurationManager.AppSettings["GoogleAPIKey"]; 
+        GoogleMapForASPNet1.GoogleMapObject.APIKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
 
         //Specify width and height for map. You can specify either in pixels or in percentage relative to it's container.
         GoogleMapForASPNet1.GoogleMapObject.Width = "900px"; // You can also specify percentage(e.g. 80%) here
@@ -26,8 +27,6 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
         GoogleMapForASPNet1.GoogleMapObject.AutomaticBoundaryAndZoom = false;
         //Specify Center Point for map. Map will be centered on this point.
         GoogleMapForASPNet1.GoogleMapObject.CenterPoint = new GooglePoint("1", 44.00, 18.00);
-
-      
 
         //Add pushpins for map. 
         //This should be done with intialization of GooglePoint class. 
@@ -56,33 +55,46 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
         PL.Points.Add(GP1);
         PL.Points.Add(GP2);
         PL.Width = 3;
-       // PL.ColorCode = 
-        
+
+        Color color = Color.FromName(Color.Cyan.Name);
+        PL.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+
         GoogleMapForASPNet1.GoogleMapObject.Points.Add(GP1);
         GoogleMapForASPNet1.GoogleMapObject.Points.Add(GP2);
         GoogleMapForASPNet1.GoogleMapObject.Polylines.Add(PL);
-        
+
+        this.TextBox1.Text = this.Timer1.Interval.ToString();
+
     }
     protected void Timer1_Tick(object sender, EventArgs e)
     {
-        // Move Red Car. 
-        //Increment longitude value to move car horizontally. 
         GoogleMapForASPNet1.GoogleMapObject.Points["TRACK"].Longitude += 0.010;
+        GoogleMapForASPNet1.GoogleMapObject.Points["TRACK"].Latitude -= 0.010;
 
-        // Check if the custom Map is to be built
-        if (this.CheckBoxCustomMapEnabled.Checked == true)
-        {
-           
-        }
-        else
-        {
-           
-        }
+        GoogleMapForASPNet1.GoogleMapObject.Points["LABEL"].Longitude += 0.010;
+        GoogleMapForASPNet1.GoogleMapObject.Points["LABEL"].Latitude -= 0.010;
+
+       
     }
-
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
     {
-
+        // Check if the custom Map is to be built
+        if (this.CheckBoxCustomMapEnabled.Checked == true)
+        {
+            if (GoogleMapForASPNet1.GoogleMapObject.Polygons.Count == 0)
+                GoogleMapForASPNet1.GoogleMapObject.Polygons.Add(CustomMap.GetBlankPoligon());
+        }
+        else
+        {
+            if (GoogleMapForASPNet1.GoogleMapObject.Polygons.Count > 0)
+                GoogleMapForASPNet1.GoogleMapObject.Polygons.Remove("BLANK");
+        }
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        int Result;
+        if (int.TryParse(this.TextBox1.Text, out Result))
+            this.Timer1.Interval = Result;
     }
 }

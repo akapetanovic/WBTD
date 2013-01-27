@@ -41,12 +41,12 @@
         }
         .style14
         {
-            width: 307px;
+            width: 221px;
         }
         .style15
         {
             height: 85px;
-            width: 307px;
+            width: 221px;
         }
     </style>
 </head>
@@ -80,7 +80,8 @@
                         <td class="style14">
                            
                             <asp:CheckBox ID="CheckBoxCustomMapEnabled" runat="server" 
-                                oncheckedchanged="CheckBox1_CheckedChanged" Text="Custom Map" />
+                                oncheckedchanged="CheckBox1_CheckedChanged" Text="Custom Map" 
+                                Font-Size="Small" />
                         </td>
                         <td class="style12">
                             aaaaa</td>
@@ -89,7 +90,12 @@
                     </tr>
                     <tr>
                         <td class="style14">
-                            &nbsp;</td>
+                            <asp:Button ID="Button1" runat="server" Font-Size="Small" 
+                                onclick="Button1_Click" 
+                                style="z-index: 1; top: -10px; position: relative; right: -90px; width: 88px; left: 2px" 
+                                Text="Update" />
+                            <asp:TextBox ID="TextBox1" runat="server" Width="82px"></asp:TextBox>
+                        </td>
                         <td class="style12">
                             aaaaa</td>
                         <td class="style9">
