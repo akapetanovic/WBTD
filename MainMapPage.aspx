@@ -90,12 +90,7 @@
                     </tr>
                     <tr>
                         <td class="style14">
-                            <asp:Button ID="Button1" runat="server" Font-Size="Small" 
-                                onclick="Button1_Click" 
-                                style="z-index: 1; top: -10px; position: relative; right: -90px; width: 88px; left: 2px" 
-                                Text="Update" />
-                            <asp:TextBox ID="TextBox1" runat="server" Width="82px"></asp:TextBox>
-                        </td>
+                            &nbsp;</td>
                         <td class="style12">
                             aaaaa</td>
                         <td class="style9">
@@ -114,6 +109,14 @@
      
         </tr>
         </table>
+         <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+             <ContentTemplate>
+                 <h3 style="color:Red;">
+                     Zoom Level:
+                     <asp:Label ID="lblZoomLevel" runat="server" Width="200"></asp:Label>
+                 </h3>
+             </ContentTemplate>
+     </asp:UpdatePanel>
          </form>
    
 </body>

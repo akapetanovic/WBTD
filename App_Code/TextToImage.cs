@@ -20,7 +20,7 @@ public class TextToImage : GooglePoint
 		//
 	}
 
-    public void GenerateAndStore(string txtText)
+    public void GenerateAndStore(string txtText, Color TextColor)
     {
         string text = txtText.Trim();
         Bitmap bitmap = new Bitmap(1, 1);
@@ -33,7 +33,7 @@ public class TextToImage : GooglePoint
         graphics.Clear(Color.Black);
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
         graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-        graphics.DrawString(text, font, new SolidBrush(Color.DarkCyan), 0, 0);
+        graphics.DrawString(text, font, new SolidBrush(TextColor), 0, 0);
         graphics.Flush();
         graphics.Dispose();
         string fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + ".png";
