@@ -26,12 +26,16 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
 
             // Each update cycle call TrackerProvider to get new display data
             GoogleMapForASPNet1.GoogleMapObject = TrackProvider.GetDisplayData();
+
+            this.lblUpdateRateReadout.Text = this.Timer1.Interval.ToString();
+            this.TextBoxUpdateRate.Text = this.lblUpdateRateReadout.Text;
         }
     }
     protected void Timer1_Tick(object sender, EventArgs e)
     {
+
         // Each update cycle call TrackerProvider to get new display data
-       GoogleMapForASPNet1.GoogleMapObject = TrackProvider.GetDisplayData();
+        GoogleMapForASPNet1.GoogleMapObject = TrackProvider.GetDisplayData();
     }
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
@@ -60,5 +64,11 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
     protected void CheckBox3_CheckedChanged(object sender, EventArgs e)
     {
         TrackProvider.PredictionEngine3_Enabled = this.CheckBox3.Checked;
+    }
+    protected void BtnUpdateRate_Click(object sender, EventArgs e)
+    {
+        this.Timer1.Interval = int.Parse(this.TextBoxUpdateRate.Text);
+        this.lblUpdateRateReadout.Text = this.Timer1.Interval.ToString();
+        this.TextBoxUpdateRate.Text = this.lblUpdateRateReadout.Text;
     }
 }

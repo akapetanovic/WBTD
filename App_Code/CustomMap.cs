@@ -66,6 +66,61 @@ public class CustomMap
         return BP;
     }
 
+    public static GooglePolygon GetStatePoligon()
+    {
+        GooglePolygon BP = new GooglePolygon();
+
+        GooglePoint GP1 = new GooglePoint();
+        GP1.ID = "SP1";
+        GP1.Latitude = 42.51;
+        GP1.Longitude = 18.51;
+
+        GooglePoint GP2 = new GooglePoint();
+        GP2.ID = "SP2";
+        GP2.Latitude = 43.89;
+        GP2.Longitude = 19.54;
+
+        GooglePoint GP3 = new GooglePoint();
+        GP3.ID = "SP3";
+        GP3.Latitude = 45.03;
+        GP3.Longitude = 19.14;
+
+        GooglePoint GP4 = new GooglePoint();
+        GP4.ID = "SP4";
+        GP4.Latitude = 45.18;
+        GP4.Longitude = 15.78;
+
+        GooglePoint GP5 = new GooglePoint();
+        GP5.ID = "SP5";
+        GP5.Latitude = 42.89;
+        GP5.Longitude = 17.52;
+
+        GooglePoint GP6 = new GooglePoint();
+        GP6.ID = "SP1";
+        GP6.Latitude = 42.51;
+        GP6.Longitude = 18.51;
+
+        BP.ID = "BLANK";
+        //Give Hex code for line color
+        Color color = Color.FromName(Color.WhiteSmoke.Name);
+        string ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+
+        BP.FillColor = ColorCode;
+        BP.FillOpacity = 0;
+        BP.StrokeColor = ColorCode;
+        BP.StrokeOpacity = 1;
+        BP.StrokeWeight = 1;
+
+        BP.Points.Add(GP1);
+        BP.Points.Add(GP2);
+        BP.Points.Add(GP3);
+        BP.Points.Add(GP4);
+        BP.Points.Add(GP5);
+        BP.Points.Add(GP6);
+
+        return BP;
+    }
+
     public static double GetScaleFactor(int ZoomLevel)
     {
         double ScaleFactor = 1;

@@ -24,29 +24,33 @@
         .style4
         {
             height: 85px;
-            width: 290px;
+            width: 424px;
         }
         .style9
         {
-            width: 290px;
+            width: 424px;
         }
         .style12
         {
-            width: 238px;
+            width: 319px;
         }
         .style13
         {
             height: 85px;
-            width: 238px;
+            width: 319px;
         }
         .style14
         {
-            width: 301px;
+            width: 199px;
         }
         .style15
         {
             height: 85px;
-            width: 301px;
+            width: 199px;
+        }
+        .style16
+        {
+            font-size: small;
         }
     </style>
 </head>
@@ -59,7 +63,7 @@
             <asp:ScriptManager ID="ScriptManager1" runat="server">
         </asp:ScriptManager>
 
-    <h3><a href="Default.aspx">Back</a></h3>
+    <h3 class="style16"><a href="Default.aspx">Back</a></h3>
     <div>
         <asp:Panel ID="Panel1" runat="server">
         </asp:Panel>
@@ -74,7 +78,7 @@
    
             </td>
             <td class="style2">
-                <table style="width: 300px; height: 200px; margin-left: 10px;" align="left" 
+                <table style="width: 300px; height: 219px; margin-left: 10px;" align="left" 
                     bgcolor="#999999" border="aaa" frame="border">
                     <tr>
                         <td class="style14">
@@ -84,9 +88,9 @@
                                 Font-Size="Small" />
                         </td>
                         <td class="style12">
-                            aaaaa</td>
+                            &nbsp;</td>
                         <td class="style9">
-                            aaaaa</td>
+                            &nbsp;</td>
                     </tr>
                     <tr>
                         <td class="style14">
@@ -98,17 +102,27 @@
                                 oncheckedchanged="CheckBox3_CheckedChanged" Text="P Engine 3" />
                         </td>
                         <td class="style12">
-                            aaaaa</td>
+                            &nbsp;</td>
                         <td class="style9">
-                            aaaaa</td>
+                            &nbsp;</td>
                     </tr>
                     <tr>
                         <td class="style15">
-                            aaaaa</td>
+                            <asp:UpdatePanel ID="UpdatePanel3" runat="server">
+                                <ContentTemplate>
+                                    <asp:Label ID="Label1" runat="server" Text="Update Rate (ms)" Font-Size="9pt"></asp:Label>
+                                    <asp:Label ID="lblUpdateRateReadout" runat="server" Font-Size="9pt" Text="N/A"></asp:Label><br />
+                                    <asp:TextBox ID="TextBoxUpdateRate" runat="server" Height="16px" Width="64px"></asp:TextBox>
+                                     <asp:Button ID="BtnUpdateRate" runat="server" Height="26px" Text="Update" 
+                                width="69px" onclick="BtnUpdateRate_Click" />
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                           
+                        </td>
                         <td class="style13">
-                            aaaaa</td>
+                            &nbsp;</td>
                         <td class="style4">
-                            aaaaa</td>
+                            &nbsp;</td>
                     </tr>
 
                 </table>

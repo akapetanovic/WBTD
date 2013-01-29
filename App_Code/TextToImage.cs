@@ -20,7 +20,7 @@ public class TextToImage : GooglePoint
 		//
 	}
 
-    public void GenerateAndStore(string txtText, Color TextColor)
+    public void GenerateAndStore(string FileName, string txtText, Color TextColor)
     {
         string text = txtText.Trim();
         Bitmap bitmap = new Bitmap(1, 1);
@@ -37,6 +37,6 @@ public class TextToImage : GooglePoint
         graphics.Flush();
         graphics.Dispose();
         string fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + ".png";
-        bitmap.Save(HttpContext.Current.Server.MapPath("~/icons/") + "label.png", ImageFormat.Png);
+        bitmap.Save(HttpContext.Current.Server.MapPath("~/icons/labels/") + FileName + ".png", ImageFormat.Png);
     }
 }

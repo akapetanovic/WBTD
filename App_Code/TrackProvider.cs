@@ -18,6 +18,8 @@ public class TrackProvider
     public static bool PredictionEngine3_Enabled = false;
     public static bool CustomMapEnabled_Enabled = false;
 
+    private static double Lat = 44.0;
+
     public static void SetZoomLevel(int Zoom)
     {
         CurrentZoomLevel = Zoom;
@@ -41,13 +43,15 @@ public class TrackProvider
             Track.Longitude = Lon;
             Track.ID = Track_ID;
             Track.IconImage = ImagePath;
+          
 
             // Label Data
             TextToImage TI = new TextToImage();
-            TI.GenerateAndStore(Label_ID + Environment.NewLine + ModeC, Color.Green);
+            TI.GenerateAndStore(Label_ID, Label_ID + Environment.NewLine + ModeC, Color.Green);
             Label.ID = Label_ID;
             Label.Draggable = true;
-            Label.IconImage = "icons/label.png";
+            Label.IconImage = "icons/labels/" + Label_ID + ".png";
+
             
             // Please the label close the the track symbol factoring the zoom setting.
             Label.Latitude = Track.Latitude + (0.2 / CustomMap.GetScaleFactor(CurrentZoomLevel));
@@ -90,6 +94,8 @@ public class TrackProvider
        
     }
 
+
+
     // This method is to be called upon page load to initialise 
     // the data structures
     public static void Initialise()
@@ -115,6 +121,7 @@ public class TrackProvider
         if (CustomMapEnabled_Enabled && DisplayDataOut.Polygons.Count == 0)
         {
             DisplayDataOut.Polygons.Add(CustomMap.GetBlankPoligon());
+            DisplayDataOut.Polygons.Add(CustomMap.GetStatePoligon());
         }
         else if (CustomMapEnabled_Enabled == false)
         {
@@ -133,14 +140,19 @@ public class TrackProvider
         // DEVELOPMENT TEST code
         //
         // Define track data and add them to the master list
-        TrackLabel_and_Predicted Data = new TrackLabel_and_Predicted();
-        TrackAndLabel MasterTrack = new TrackAndLabel(Color.Green, 2, 44.00, 18.00, "TRACK", "LABEL", "icons/Track_Green.png", "285");
+        TrackAndLabel MasterTrack = new TrackAndLabel(Color.Green, 2, Lat, 18.00, "TRACK1", "LABEL1", "icons/Track_Green.png", "285");
         TrackLabel_and_Predicted TrackWithPredicted = new TrackLabel_and_Predicted();
         TrackWithPredicted.MasterTrack = MasterTrack;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         // Add data to the master list
         DisplayData.Add(TrackWithPredicted);
+
+        MasterTrack = new TrackAndLabel(Color.Green, 2, Lat, 18.50, "TRACK2", "LABEL2", "icons/Track_Green.png", "400");
+        TrackWithPredicted = new TrackLabel_and_Predicted();
+        TrackWithPredicted.MasterTrack = MasterTrack;
+        DisplayData.Add(TrackWithPredicted);
+
+        Lat = Lat + 0.020;
         
         foreach (TrackLabel_and_Predicted Track in DisplayData)
         {
