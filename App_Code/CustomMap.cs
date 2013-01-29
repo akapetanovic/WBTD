@@ -57,12 +57,11 @@ public class CustomMap
         BP.StrokeOpacity = 1;
         BP.StrokeWeight = 1;
 
-        BP.Points.Add(GP1);
-        BP.Points.Add(GP2);
-        BP.Points.Add(GP3);
-        BP.Points.Add(GP4);
         BP.Points.Add(GP5);
-
+        BP.Points.Add(GP4);
+        BP.Points.Add(GP3);
+        BP.Points.Add(GP2);
+        BP.Points.Add(GP1);
 
         return BP;
     }

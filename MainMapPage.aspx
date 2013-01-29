@@ -41,12 +41,12 @@
         }
         .style14
         {
-            width: 221px;
+            width: 301px;
         }
         .style15
         {
             height: 85px;
-            width: 221px;
+            width: 301px;
         }
     </style>
 </head>
@@ -90,7 +90,13 @@
                     </tr>
                     <tr>
                         <td class="style14">
-                            &nbsp;</td>
+                            <asp:CheckBox ID="CheckBox1" runat="server" ForeColor="Yellow" 
+                                oncheckedchanged="CheckBox1_CheckedChanged1" Text="P Engine 1" />
+                            <asp:CheckBox ID="CheckBox2" runat="server" ForeColor="Red" 
+                                oncheckedchanged="CheckBox2_CheckedChanged" Text="P Engine 2" />
+                            <asp:CheckBox ID="CheckBox3" runat="server" ForeColor="Blue" 
+                                oncheckedchanged="CheckBox3_CheckedChanged" Text="P Engine 3" />
+                        </td>
                         <td class="style12">
                             aaaaa</td>
                         <td class="style9">

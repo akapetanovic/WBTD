@@ -13,6 +13,11 @@ public class TrackProvider
     private static GoogleObject DisplayDataOut = new GoogleObject();
     private static int CurrentZoomLevel = 8;
 
+    public static bool PredictionEngine1_Enabled = false;
+    public static bool PredictionEngine2_Enabled = false;
+    public static bool PredictionEngine3_Enabled = false;
+    public static bool CustomMapEnabled_Enabled = false;
+
     public static void SetZoomLevel(int Zoom)
     {
         CurrentZoomLevel = Zoom;
@@ -39,7 +44,7 @@ public class TrackProvider
 
             // Label Data
             TextToImage TI = new TextToImage();
-            TI.GenerateAndStore(Label_ID + Environment.NewLine + ModeC, Color.Cyan);
+            TI.GenerateAndStore(Label_ID + Environment.NewLine + ModeC, Color.Green);
             Label.ID = Label_ID;
             Label.Draggable = true;
             Label.IconImage = "icons/label.png";
@@ -60,7 +65,7 @@ public class TrackProvider
             TrackToPredictionLine.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
             TrackToPredictionLine.Width = LineWidth;
             TrackToPredictionLine.Points.Add(Track);
-            
+
             // Here extract the predicted data based on the callsign
             // and include the predicted position s the end line
             TrackToPredictionLine.Points.Add(Label);
@@ -104,14 +109,22 @@ public class TrackProvider
 
     public static GoogleObject GetDisplayData()
     {
-        DisplayDataOut.Points.Clear();
         DisplayDataOut.Polylines.Clear();
+        DisplayDataOut.Points.Clear();
+        
+        if (CustomMapEnabled_Enabled && DisplayDataOut.Polygons.Count == 0)
+        {
+            DisplayDataOut.Polygons.Add(CustomMap.GetBlankPoligon());
+        }
+        else if (CustomMapEnabled_Enabled == false)
+        {
+            DisplayDataOut.Polygons.Clear();
+        }
 
         DisplayData.Clear();
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Here build the new display list.
-
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +134,7 @@ public class TrackProvider
         //
         // Define track data and add them to the master list
         TrackLabel_and_Predicted Data = new TrackLabel_and_Predicted();
-        TrackAndLabel MasterTrack = new TrackAndLabel(Color.SkyBlue, 3, 44.00, 18.00, "TRACK", "LABEL", "icons/Track_Cyan.png", "285");
+        TrackAndLabel MasterTrack = new TrackAndLabel(Color.Green, 2, 44.00, 18.00, "TRACK", "LABEL", "icons/Track_Green.png", "285");
         TrackLabel_and_Predicted TrackWithPredicted = new TrackLabel_and_Predicted();
         TrackWithPredicted.MasterTrack = MasterTrack;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -36,17 +36,7 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
     {
-        // Check if the custom Map is to be built
-        if (this.CheckBoxCustomMapEnabled.Checked == true)
-        {
-            if (GoogleMapForASPNet1.GoogleMapObject.Polygons.Count == 0)
-                GoogleMapForASPNet1.GoogleMapObject.Polygons.Add(CustomMap.GetBlankPoligon());
-        }
-        else
-        {
-            if (GoogleMapForASPNet1.GoogleMapObject.Polygons.Count > 0)
-                GoogleMapForASPNet1.GoogleMapObject.Polygons.Remove("BLANK");
-        }
+        TrackProvider.CustomMapEnabled_Enabled = this.CheckBoxCustomMapEnabled.Checked;
     }
 
     //Add event handler for PushpinDrag event
@@ -58,5 +48,17 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
 
         // Update tracks on each zoom level change
         GoogleMapForASPNet1.GoogleMapObject = TrackProvider.GetDisplayData();
+    }
+    protected void CheckBox1_CheckedChanged1(object sender, EventArgs e)
+    {
+        TrackProvider.PredictionEngine1_Enabled = this.CheckBox1.Checked;
+    }
+    protected void CheckBox2_CheckedChanged(object sender, EventArgs e)
+    {
+        TrackProvider.PredictionEngine2_Enabled = this.CheckBox2.Checked;
+    }
+    protected void CheckBox3_CheckedChanged(object sender, EventArgs e)
+    {
+        TrackProvider.PredictionEngine3_Enabled = this.CheckBox3.Checked;
     }
 }
