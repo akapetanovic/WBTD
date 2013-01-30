@@ -31,20 +31,25 @@ public class TrackProvider
         public GooglePoint Label = new GooglePoint();
         public string TrackColor;
         public GooglePolyline LeaderLine = new GooglePolyline();
+        
         // Applicable only for drawing line from the
         // master (present) track to the predicted position
-        public GooglePolyline TrackToPredictionLine = new GooglePolyline();
+        public GooglePoint PredictionSymbol_1 = null;
+        public GooglePoint PredictionSymbol_2 = null;
+        public GooglePoint PredictionSymbol_3 = null;
+        public GooglePolyline TrackToPredictionLine1 = new GooglePolyline();
+        public GooglePolyline TrackToPredictionLine2 = new GooglePolyline();
+        public GooglePolyline TrackToPredictionLine3 = new GooglePolyline();
 
-        public TrackAndLabel(Color T_Color, int LineWidth, double Lat, double Lon, string Track_ID, string Label_ID, // This has be a CALLSIGN
-            string ImagePath, string ModeC)
+        public TrackAndLabel(int LineWidth, double Lat, double Lon, string Track_ID, string Label_ID, // This has be a CALLSIGN
+                            string ModeC)
         {
             // Track data
             Track.Latitude = Lat;
             Track.Longitude = Lon;
             Track.ID = Track_ID;
-            Track.IconImage = ImagePath;
+            Track.IconImage = "icons/Track_Green.png";
           
-
             // Label Data
             TextToImage TI = new TextToImage();
             TI.GenerateAndStore(Label_ID, Label_ID + Environment.NewLine + ModeC, Color.Green);
@@ -52,49 +57,78 @@ public class TrackProvider
             Label.Draggable = true;
             Label.IconImage = "icons/labels/" + Label_ID + ".png";
 
-            
-            // Please the label close the the track symbol factoring the zoom setting.
+            // Place the label close the the track symbol factoring in the zoom setting.
             Label.Latitude = Track.Latitude + (0.2 / CustomMap.GetScaleFactor(CurrentZoomLevel));
             Label.Longitude = Track.Longitude - (0.15 / CustomMap.GetScaleFactor(CurrentZoomLevel));
             
             // Leader line
-            Color color = Color.FromName(T_Color.Name);
+            Color color = Color.FromName(Color.Green.Name);
             LeaderLine.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
             LeaderLine.Width = LineWidth;
+            LeaderLine.ID = "L1";
             LeaderLine.Points.Add(Track);
             LeaderLine.Points.Add(Label);
 
-            // Leader line
-            color = Color.FromName(T_Color.Name);
-            TrackToPredictionLine.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
-            TrackToPredictionLine.Width = LineWidth;
-            TrackToPredictionLine.Points.Add(Track);
+            // Track prediction symbol and line 1
+            if (PredictionEngine1_Enabled)
+            {
+                PredictionSymbol_1 = new GooglePoint();
+                PredictionSymbol_1.Latitude = Track.Latitude + 0.050;
+                PredictionSymbol_1.Longitude = Track.Longitude + 0.020;
+                PredictionSymbol_1.ID = "P1";
+                PredictionSymbol_1.IconImage = "icons/Track_Yellow.png";
+                color = Color.FromName(Color.Yellow.Name);
+                TrackToPredictionLine1.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+                TrackToPredictionLine1.ID = "L2";
+                TrackToPredictionLine1.Width = LineWidth;
+                TrackToPredictionLine1.Points.Add(Track);
+                TrackToPredictionLine1.Points.Add(PredictionSymbol_1);
+            }
 
-            // Here extract the predicted data based on the callsign
-            // and include the predicted position s the end line
-            TrackToPredictionLine.Points.Add(Label);
+            // Track prediction symbol and line 1
+            if (PredictionEngine2_Enabled)
+            {
+                PredictionSymbol_2 = new GooglePoint();
+                PredictionSymbol_2.Latitude = Track.Latitude + 0.060;
+                PredictionSymbol_2.Longitude = Track.Longitude + 0.040;
+                PredictionSymbol_2.ID = "P2";
+                PredictionSymbol_2.IconImage = "icons/Track_Blue.png";
+                color = Color.FromName(Color.Blue.Name);
+                TrackToPredictionLine2.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+                TrackToPredictionLine2.ID = "L3";
+                TrackToPredictionLine2.Width = LineWidth;
+                TrackToPredictionLine2.Points.Add(Track);
+                TrackToPredictionLine2.Points.Add(PredictionSymbol_2);
+            }
+
+            // Track prediction symbol and line 1
+            if (PredictionEngine3_Enabled)
+            {
+                PredictionSymbol_3 = new GooglePoint();
+                PredictionSymbol_3.Latitude = Track.Latitude + 0.070;
+                PredictionSymbol_3.Longitude = Track.Longitude + 0.060;
+                PredictionSymbol_3.ID = "P3";
+                PredictionSymbol_3.IconImage = "icons/Track_Pink.png";
+                color = Color.FromName(Color.Pink.Name);
+                TrackToPredictionLine3.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+                TrackToPredictionLine3.ID = "L4";
+                TrackToPredictionLine3.Width = LineWidth;
+                TrackToPredictionLine3.Points.Add(Track);
+                TrackToPredictionLine3.Points.Add(PredictionSymbol_3);
+            }
+
         }
-    }
-
-    private class TrackLabel_and_Predicted
-    {
-        public TrackAndLabel MasterTrack;
-        public TrackAndLabel Predicted1;
-        public TrackAndLabel Predicted2;
-        public TrackAndLabel Predicted3;
     }
 
     // This is the main data storage for the current update cycle
     // It will get updated at the specified update rate and used by the page update timer
     // to obtain the latest data do be displayed.
-    private static System.Collections.Generic.List<TrackLabel_and_Predicted> DisplayData = new System.Collections.Generic.List<TrackLabel_and_Predicted>();
+    private static System.Collections.Generic.List<TrackAndLabel> DisplayData = new System.Collections.Generic.List<TrackAndLabel>();
 
     public TrackProvider()
     {
        
     }
-
-
 
     // This method is to be called upon page load to initialise 
     // the data structures
@@ -103,20 +137,27 @@ public class TrackProvider
         DisplayDataOut.APIKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
 
         //Specify width and height for map. You can specify either in pixels or in percentage relative to it's container.
-        DisplayDataOut.Width = "900px"; // You can also specify percentage(e.g. 80%) here
-        DisplayDataOut.Height = "700px";
+        DisplayDataOut.Width = "1000px"; // You can also specify percentage(e.g. 80%) here
+        DisplayDataOut.Height = "800px";
 
         //Specify initial Zoom level.
         DisplayDataOut.ZoomLevel = CurrentZoomLevel;
         DisplayDataOut.AutomaticBoundaryAndZoom = false;
         //Specify Center Point for map. Map will be centered on this point.
         DisplayDataOut.CenterPoint = new GooglePoint("1", 44.00, 18.00);
+
+        DisplayDataOut.Polylines.Capacity = 1000;
+        DisplayDataOut.Polygons.Capacity = 1000;
+        DisplayDataOut.Points.Capacity = 4000;
+
     }
 
     public static GoogleObject GetDisplayData()
     {
         DisplayDataOut.Polylines.Clear();
         DisplayDataOut.Points.Clear();
+
+      
         
         if (CustomMapEnabled_Enabled && DisplayDataOut.Polygons.Count == 0)
         {
@@ -140,48 +181,36 @@ public class TrackProvider
         // DEVELOPMENT TEST code
         //
         // Define track data and add them to the master list
-        TrackAndLabel MasterTrack = new TrackAndLabel(Color.Green, 2, Lat, 18.00, "TRACK1", "LABEL1", "icons/Track_Green.png", "285");
-        TrackLabel_and_Predicted TrackWithPredicted = new TrackLabel_and_Predicted();
-        TrackWithPredicted.MasterTrack = MasterTrack;
+        TrackAndLabel MasterTrack = new TrackAndLabel(2, Lat, 18.00, "REAL", "LABEL1", "285");
+       
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Add data to the master list
-        DisplayData.Add(TrackWithPredicted);
-
-        MasterTrack = new TrackAndLabel(Color.Green, 2, Lat, 18.50, "TRACK2", "LABEL2", "icons/Track_Green.png", "400");
-        TrackWithPredicted = new TrackLabel_and_Predicted();
-        TrackWithPredicted.MasterTrack = MasterTrack;
-        DisplayData.Add(TrackWithPredicted);
+        DisplayData.Add(MasterTrack);
 
         Lat = Lat + 0.020;
-        
-        foreach (TrackLabel_and_Predicted Track in DisplayData)
+
+        foreach (TrackAndLabel Track in DisplayData)
         {
-            DisplayDataOut.Points.Add(Track.MasterTrack.Track);
-            DisplayDataOut.Points.Add(Track.MasterTrack.Label);
-            DisplayDataOut.Polylines.Add(Track.MasterTrack.LeaderLine);
+            DisplayDataOut.Points.Add(Track.Track);
+            DisplayDataOut.Points.Add(Track.Label);
+            DisplayDataOut.Polylines.Add(Track.LeaderLine);
 
-            if (Track.Predicted1 != null)
+            if (Track.PredictionSymbol_1 != null)
             {
-                DisplayDataOut.Points.Add(Track.Predicted1.Track);
-                DisplayDataOut.Points.Add(Track.Predicted1.Label);
-                DisplayDataOut.Polylines.Add(Track.Predicted1.LeaderLine);
-                DisplayDataOut.Polylines.Add(Track.Predicted1.TrackToPredictionLine);
+                DisplayDataOut.Points.Add(Track.PredictionSymbol_1);
+               DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine1);
             }
 
-            if (Track.Predicted2 != null)
+            if (Track.PredictionSymbol_2 != null)
             {
-                DisplayDataOut.Points.Add(Track.Predicted2.Track);
-                DisplayDataOut.Points.Add(Track.Predicted2.Label);
-                DisplayDataOut.Polylines.Add(Track.Predicted2.LeaderLine);
-                DisplayDataOut.Polylines.Add(Track.Predicted2.TrackToPredictionLine);
+                DisplayDataOut.Points.Add(Track.PredictionSymbol_2);
+                DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine2);
             }
 
-            if (Track.Predicted3 != null)
+            if (Track.PredictionSymbol_3 != null)
             {
-                DisplayDataOut.Points.Add(Track.Predicted3.Track);
-                DisplayDataOut.Points.Add(Track.Predicted3.Label);
-                DisplayDataOut.Polylines.Add(Track.Predicted3.LeaderLine);
-                DisplayDataOut.Polylines.Add(Track.Predicted3.TrackToPredictionLine);
+                DisplayDataOut.Points.Add(Track.PredictionSymbol_3);
+                DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine3);
             }
         }
         

@@ -71,4 +71,5 @@ public partial class MapWithAutoMovingPushpins : System.Web.UI.Page
         this.lblUpdateRateReadout.Text = this.Timer1.Interval.ToString();
         this.TextBoxUpdateRate.Text = this.lblUpdateRateReadout.Text;
     }
+   
 }

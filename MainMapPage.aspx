@@ -52,6 +52,10 @@
         {
             font-size: small;
         }
+        .style17
+        {
+            font-size: medium;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +83,7 @@
             </td>
             <td class="style2">
                 <table style="width: 300px; height: 219px; margin-left: 10px;" align="left" 
-                    bgcolor="#999999" border="aaa" frame="border">
+                    bgcolor="Gray" border="aaa" frame="border">
                     <tr>
                         <td class="style14">
                            
@@ -96,9 +100,9 @@
                         <td class="style14">
                             <asp:CheckBox ID="CheckBox1" runat="server" ForeColor="Yellow" 
                                 oncheckedchanged="CheckBox1_CheckedChanged1" Text="P Engine 1" />
-                            <asp:CheckBox ID="CheckBox2" runat="server" ForeColor="Red" 
+                            <asp:CheckBox ID="CheckBox2" runat="server" ForeColor="Blue" 
                                 oncheckedchanged="CheckBox2_CheckedChanged" Text="P Engine 2" />
-                            <asp:CheckBox ID="CheckBox3" runat="server" ForeColor="Blue" 
+                            <asp:CheckBox ID="CheckBox3" runat="server" ForeColor="Fuchsia" 
                                 oncheckedchanged="CheckBox3_CheckedChanged" Text="P Engine 3" />
                         </td>
                         <td class="style12">
@@ -132,8 +136,8 @@
          <asp:UpdatePanel ID="UpdatePanel2" runat="server">
              <ContentTemplate>
                  <h3 style="color:Red;">
-                     Zoom Level:
-                     <asp:Label ID="lblZoomLevel" runat="server" Width="200"></asp:Label>
+                     <span class="style17">Zoom Level: </span>
+                     <asp:Label ID="lblZoomLevel" runat="server" Width="200px" Font-Size="Medium"></asp:Label>
                  </h3>
              </ContentTemplate>
      </asp:UpdatePanel>
