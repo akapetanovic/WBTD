@@ -36,7 +36,6 @@ public class TextToImage : GooglePoint
         graphics.DrawString(text, font, new SolidBrush(TextColor), 0, 0);
         graphics.Flush();
         graphics.Dispose();
-        string fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + ".png";
-        bitmap.Save(HttpContext.Current.Server.MapPath("~/icons/labels/") + FileName + ".png", ImageFormat.Png);
+        bitmap.Save(HttpContext.Current.Server.MapPath("~/icons/labels/dynamic/") + FileName + ".png", ImageFormat.Png);
     }
 }

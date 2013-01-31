@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Drawing;
 using System.Configuration;
+using System.IO;
+using System.Threading;
 
 /// <summary>
 /// Summary description for TrackProvider
@@ -18,20 +20,20 @@ public class TrackProvider
     public static bool PredictionEngine3_Enabled = false;
     public static bool CustomMapEnabled_Enabled = false;
 
-    private static double Lat = 44.0;
+    public static int IconSwitcher = 0;
 
     public static void SetZoomLevel(int Zoom)
     {
         CurrentZoomLevel = Zoom;
     }
-    
+
     private class TrackAndLabel
     {
         public GooglePoint Track = new GooglePoint();
         public GooglePoint Label = new GooglePoint();
         public string TrackColor;
         public GooglePolyline LeaderLine = new GooglePolyline();
-        
+
         // Applicable only for drawing line from the
         // master (present) track to the predicted position
         public GooglePoint PredictionSymbol_1 = null;
@@ -41,26 +43,33 @@ public class TrackProvider
         public GooglePolyline TrackToPredictionLine2 = new GooglePolyline();
         public GooglePolyline TrackToPredictionLine3 = new GooglePolyline();
 
-        public TrackAndLabel(int LineWidth, double Lat, double Lon, string Track_ID, string Label_ID, // This has be a CALLSIGN
+        public TrackAndLabel(int LineWidth, double Lat, double Lon, string Track_ID, string Label_ID, // This has be a CALLSIGN or ModeA
                             string ModeC)
         {
             // Track data
             Track.Latitude = Lat;
             Track.Longitude = Lon;
             Track.ID = Track_ID;
-            Track.IconImage = "icons/Track_Green.png";
-          
+            if (IconSwitcher == 0)
+            Track.IconImage = "icons/Track_Blue.png";
+            else
+            Track.IconImage = "icons/Track_Pink.png";
+
             // Label Data
             TextToImage TI = new TextToImage();
-            TI.GenerateAndStore(Label_ID, Label_ID + Environment.NewLine + ModeC, Color.Green);
+            TI.GenerateAndStore(Label_ID + IconSwitcher.ToString(), Label_ID + Environment.NewLine + ModeC, Color.Green);
             Label.ID = Label_ID;
             Label.Draggable = true;
-            Label.IconImage = "icons/labels/" + Label_ID + ".png";
+            Label.IconImage = "icons/labels/dynamic/" + Label_ID + IconSwitcher.ToString() + ".png";
+            if (IconSwitcher == 0)
+                IconSwitcher = 1;
+            else
+                IconSwitcher = 0;
 
             // Place the label close the the track symbol factoring in the zoom setting.
             Label.Latitude = Track.Latitude + (0.2 / CustomMap.GetScaleFactor(CurrentZoomLevel));
             Label.Longitude = Track.Longitude - (0.15 / CustomMap.GetScaleFactor(CurrentZoomLevel));
-            
+
             // Leader line
             Color color = Color.FromName(Color.Green.Name);
             LeaderLine.ColorCode = String.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
@@ -127,7 +136,7 @@ public class TrackProvider
 
     public TrackProvider()
     {
-       
+
     }
 
     // This method is to be called upon page load to initialise 
@@ -157,8 +166,6 @@ public class TrackProvider
         DisplayDataOut.Polylines.Clear();
         DisplayDataOut.Points.Clear();
 
-      
-        
         if (CustomMapEnabled_Enabled && DisplayDataOut.Polygons.Count == 0)
         {
             DisplayDataOut.Polygons.Add(CustomMap.GetBlankPoligon());
@@ -173,21 +180,58 @@ public class TrackProvider
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Here build the new display list.
+        char[] delimiterChars = { ',', '\t' };
+        StreamReader MyStreamReader;
+        string FileName = @"C:\ASTERIX\WBTD\Tracks.txt";
+        if (System.IO.File.Exists(FileName))
+        {
+            bool Success = true;
+            while (Success)
+            {
+                try
+                {
+                    MyStreamReader = System.IO.File.OpenText(FileName);
+                    int ID = 1;
+                    while (MyStreamReader.Peek() >= 0)
+                    {
+                        string DataLine = MyStreamReader.ReadLine();
+                        string[] words = DataLine.Split(delimiterChars);
 
+                        string TrackID;
+                        if (words[2] != "N/A")
+                            TrackID = words[2];
+                        else if (words[3] != "N/A")
+                            TrackID = words[3];
+                        else
+                        {
+                            TrackID = "TRACK" + ID.ToString();
+                            ID++;
+                        }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        TrackAndLabel MasterTrack = new TrackAndLabel(2, double.Parse(words[0]), double.Parse(words[1]), TrackID, TrackID, words[4]);
+                        DisplayData.Add(MasterTrack);
+                    }
+
+                    MyStreamReader.Close();
+                    MyStreamReader.Dispose();
+                    Success = false;
+                }
+                catch (System.IO.IOException e)
+                {
+                    Thread.Sleep(100);
+                }
+            }
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DEVELOPMENT TEST code
         //
         // Define track data and add them to the master list
-        TrackAndLabel MasterTrack = new TrackAndLabel(2, Lat, 18.00, "REAL", "LABEL1", "285");
-       
+        // TrackAndLabel MasterTrack = new TrackAndLabel(2, Lat, 18.00, "REAL", "LABEL1", "285");
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Add data to the master list
-        DisplayData.Add(MasterTrack);
-
-        Lat = Lat + 0.020;
+        //DisplayData.Add(MasterTrack);
 
         foreach (TrackAndLabel Track in DisplayData)
         {
@@ -198,7 +242,7 @@ public class TrackProvider
             if (Track.PredictionSymbol_1 != null)
             {
                 DisplayDataOut.Points.Add(Track.PredictionSymbol_1);
-               DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine1);
+                DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine1);
             }
 
             if (Track.PredictionSymbol_2 != null)
@@ -213,7 +257,7 @@ public class TrackProvider
                 DisplayDataOut.Polylines.Add(Track.TrackToPredictionLine3);
             }
         }
-        
+
         return DisplayDataOut;
     }
 }
